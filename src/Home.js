@@ -5,7 +5,6 @@ import binanceLogo from'./binance.svg';
 import coinbaseLogo from './coinbase.svg';
 import krakenLogo from './kraken1.svg';
 import { Link, Route } from 'react-router-dom'
-import Time from 'react-time';
 
 
 class Home extends React.Component {
@@ -69,7 +68,7 @@ class Home extends React.Component {
       componentDidMount() {
         //var myDT = new Date()
         this.setState({
-            thisTime: new Date()
+            thisTime: new Date().getDate() // TODO: add time stamp when prices were pulled
         })
         //var apiUrl = 'https://api.binance.com/api/v3/avgPrice?symbol=BTCUSDT';
     
@@ -202,7 +201,8 @@ class Home extends React.Component {
                     </div>
                     
       </div>
-      <Time value={this.state.now} format="DD/MM/YYYY" />
+      
+      
 
 
               <div className="container text-left mx-auto py-10">
