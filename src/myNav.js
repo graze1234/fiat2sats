@@ -23,6 +23,7 @@ class myNav extends React.Component {
                     <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path>
                 </svg>
             </label>
+            
             <input className="hidden" type="checkbox" id="menu-toggle" />
 
             <div className="hidden md:flex md:items-center md:w-auto w-full order-2 md:order-2" id="menu">

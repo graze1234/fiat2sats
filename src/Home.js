@@ -11,10 +11,15 @@ class Home extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {value: 1};
+        this.state = {value: 10};
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeFiatPayment = this.handleChangeFiatPayment.bind(this);
         this.gotoBinance = this.gotoBinance.bind(this);
+        
+        this.loadBinanceData = this.loadBinanceData.bind(this);
+        this.loadCoinbaseData = this.loadCoinbaseData.bind(this);
+        this.loadKrakenData = this.loadKrakenData.bind(this);
+      
       }  
     
       state = {
@@ -43,35 +48,110 @@ class Home extends React.Component {
         
       gotoBinance(e){
         e.preventDefault();
-        console.log("redirect to binance")
+        //console.log("redirect to binance")
         window.location.href = "https://www.binance.com";
         
       }
     
       gotoCoinbase(e){
         e.preventDefault();
-        console.log("redirect to coinbase")
+        //console.log("redirect to coinbase")
         window.location.href = "https://www.coinbase.com";
         
       }
     
       gotoKraken(e){
         e.preventDefault();
-        console.log("redirect to kraken")
+        //console.log("redirect to kraken")
         window.location.href = "https://www.kraken.com";
         
       }
     
     
-    
+      async loadBinanceData() {
+        try {
+          const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
+          const thisBinanceData = await res.json();
+          //console.log(thisBinanceData.price)
+          
+          this.setState({
+            binancePrice: thisBinanceData.price,
+            binanceSatsPerDollar: 100000000 / thisBinanceData.price,
+            isBinanceLoading: false,
+          })
+
+        } catch (e) {
+          console.log(e);
+      }
+      
+      }
+
+      async loadCoinbaseData() {
+        try {
+          const res = await fetch('https://api.coinbase.com/v2/prices/BTC-USD/buy');
+          const thisCoinbaseData = await res.json();
+          console.log(thisCoinbaseData)
+          
+          this.setState({
+            coinbasePrice: thisCoinbaseData.data.amount,
+            coinbaseSatsPerDollar: 100000000 / thisCoinbaseData.data.amount,
+            isCoinbaseLoading: false,
+            })
+
+        } catch (e) {
+          console.log(e);
+      }
+      
+      }
+
+      async loadKrakenData() {
+        try {
+          const res = await fetch('https://api.kraken.com/0/public/Ticker?pair=BTCUSD');
+          const thisKrakenData = await res.json();
+          //console.log(thisKrakenData.result.XXBTZUSD.a[0])
+          
+          this.setState({
+            krakenPrice: thisKrakenData.result.XXBTZUSD.a[0],
+            krakenSatsPerDollar: 100000000 / thisKrakenData.result.XXBTZUSD.a[0],
+            isKrakenLoading: false,
+            })
+
+        } catch (e) {
+          console.log(e);
+      }
+      
+      }      
+
+
+
+
+
+
+
+
+
+
+
+
+      componentWillUnmount() {
+        clearTimeout(this.loadBinanceData);
+        clearTimeout(this.loadCoinbaseData);
+        clearTimeout(this.loadKrakenData);
+      }
     
       componentDidMount() {
-        //var myDT = new Date()
-        this.setState({
-            thisTime: new Date().getDate() // TODO: add time stamp when prices were pulled
-        })
-        //var apiUrl = 'https://api.binance.com/api/v3/avgPrice?symbol=BTCUSDT';
-    
+       
+        this.loadBinanceData();
+        setInterval(this.loadBinanceData, 3100);
+
+
+        this.loadCoinbaseData();
+        setInterval(this.loadCoinbaseData, 3200);
+
+        this.loadKrakenData();
+        setInterval(this.loadKrakenData, 3000);
+
+
         var apiUrl = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT';
     
         fetch(apiUrl)
@@ -90,7 +170,7 @@ class Home extends React.Component {
           fetch(apiUrl)
           .then((response) => response.json())
           .then((data) => {
-            console.log(data)
+            //console.log(data)
             this.setState({
               coinbasePrice: data.data.amount,
               coinbaseSatsPerDollar: 100000000 / data.data.amount,
@@ -106,7 +186,7 @@ class Home extends React.Component {
           fetch(apiUrl)
           .then((response) => response.json())
           .then((data) => {
-            console.log(data)
+            //console.log(data)
             this.setState({
               krakenPrice: data.result.XXBTZUSD.a[0],
               krakenSatsPerDollar: 100000000 / data.result.XXBTZUSD.a[0],
@@ -245,7 +325,7 @@ class Home extends React.Component {
                             what is stacking sats?
                             </summary>
                             <span className="font-normal text-gray-700 pl-10 text-normal text-center">
-                            Stacking sats refers to simply building your collection of sats over time. You could choose to automate purchases with small regular amounts, both coinbase and swanbitcoin offer that as an option - or just buy sats when you can.
+                            Stacking sats refers to simply building your collection of sats over time. You could choose to automate purchases with small regular amounts, both <a href="https://www.coinbase.com/" className="underline hover:text-black hover:underline">coinbase</a> and <a href="https://www.swanbitcoin.com/" className="underline hover:text-black hover:underline">swanbitcoin</a> (us only) offer that as an option - or just buy sats when you can.
                             </span>
                             </details>
                         </div>
@@ -255,7 +335,7 @@ class Home extends React.Component {
                             where can I learn more about Bitcoin?
                             </summary>
                             <span className="font-normal text-gray-700 pl-10 text-normal text-center">
-                            We've listed some of our favorite resources to get you started on our <Link to="/resources" className="underline hover:text-black hover:underline" href="#">resources</Link> page.
+                            We've listed some of our favorite resources to get you started on our <Link to="/resources" className="underline hover:text-black hover:underline">resources</Link> page.
                             </span>
                             </details>
                         </div>                        

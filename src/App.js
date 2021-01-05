@@ -26,6 +26,10 @@ class myApp extends React.Component {
         </Switch>          
         </div>
       </div>
+      <div className="cointainer flex-1 mx-auto text-sm py-5 text-center">
+        <p className="text-yellow-500">Thank you Satoshi.</p>
+        <p className="text-gray-500">If you find this useful a few sats keep the server going: bc1qqyc3lcskfqwsym99aav0rdjc2sstxkfq6we93d</p>
+      </div>
     </div>
   )
   }
